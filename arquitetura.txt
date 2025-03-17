@@ -1,0 +1,16 @@
+ARQUITETURA DO MEU PROJETO:
+
+Stack:(_layout.tsx)              //ORGANIZA AS TELAS DO MEU PROJETO
+- Index             //TELA PRINCIPAL
+
+
+
+
+
+- (tabs)            //3 ICONES QUE MOSTRAM OS CONTEÚDOS DE TELAS DIFERENTES
+    - Início
+    - Stack Categorias      //ORGANIZA MINHAS TELAS DENTRO DE (Categorias)
+        - Listagem de Categorias (Eletrônicos, Paisagens, Acessórios)
+        - Listagem de produtos de UMA categoria(ESPECÍFICA ACIMA)
+    - Sobre mim
+- Produto Único     //TELA DE ALGUM PRODUTO ESPECÍFICO
