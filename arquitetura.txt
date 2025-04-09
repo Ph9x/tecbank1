@@ -2,6 +2,14 @@ ARQUITETURA DO MEU PROJETO:
 
 Stack:(_layout.tsx)              //ORGANIZA AS TELAS DO MEU PROJETO
 - Index             //TELA PRINCIPAL
+- Login             //TELA LOGIN
+- novaConta/        //CADASTRO
+    -Stack:(novaConta/_layout.tsx)        //ORGANIZA AS TELAS DO MEU PROJETO
+    - infoPessoais
+    - Endereco
+    - confirmacao
+    - Aviso
+- Login             //TELA LOGIN    
 
 
 
