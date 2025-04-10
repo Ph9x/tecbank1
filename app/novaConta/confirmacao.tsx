@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Pla
 import { Button } from "../../componentes/button";
 import { router } from "expo-router";
 
-export default function App() {
+export default function ConfirmacaoScreen() {
     const [password, setPassword] = useState("");
     const [confPassword, setConfPassword] = useState("");
 
