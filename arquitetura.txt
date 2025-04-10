@@ -15,9 +15,8 @@ Stack:(_layout.tsx)              //ORGANIZA AS TELAS DO MEU PROJETO
 
 
 
-- (tabs)            //3 ICONES QUE MOSTRAM OS CONTEÚDOS DE TELAS DIFERENTES
-    - Início
-    - Stack Categorias      //ORGANIZA MINHAS TELAS DENTRO DE (Categorias)
+- (tabs)            //4 ICONES QUE MOSTRAM OS CONTEÚDOS DE TELAS DIFERENTES
+    - Stack Categorias      //areaPix, cartao, carteira, home
         - Listagem de Categorias (Eletrônicos, Paisagens, Acessórios)
         - Listagem de produtos de UMA categoria(ESPECÍFICA ACIMA)
     - Sobre mim

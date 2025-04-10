@@ -4,7 +4,7 @@ import { Button } from "../../componentes/button";
 import { TextInputMask } from 'react-native-masked-text';
 import { router } from "expo-router";
 
-export default function App() {
+export default function EnderecoScreen() {
     const [cep, setCep] = useState("");
     const [rua, setRua] = useState("");
     const [numero, setNumero] = useState("");

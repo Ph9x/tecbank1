@@ -10,10 +10,10 @@ export default function RootLayout() {
                     fontSize: 20, // Tamanho da fonte do título
                     fontWeight: "bold"
                 },
-                headerStyle:{
+                headerStyle: {
                     backgroundColor: "#E878EF"
                 }
-                
+
             }}
         >
             <Stack.Screen name="index" options={{ title: "Voltar", headerShown: false }} />
@@ -25,6 +25,33 @@ export default function RootLayout() {
             <Stack.Screen name="novaConta" options={{
                 title: "Cadastro"
             }} />
+
+            <Stack.Screen name="(tabs)"         //HOME/CARTÃO/SEGUROS
+                options={{
+                    title: "AREAS",
+                    headerShown:false,
+                    headerBackVisible: false,   //ESCONDE O BOTÃO DE VOLTAR DO HEADER
+                    gestureEnabled: false  }}   //TIRA A OPÇÃO DE VOLTAR DESLIZANDO A TELA
+            />
+
+            <Stack.Screen name="servicos/seguro"         //TELA DE SEGURO
+                options={{
+                    title: "Tipo de Seguros",
+                    headerShown:false,
+                }}   
+            />
+            <Stack.Screen name="servicos/pix/pix"         //TELA DE SEGURO
+                options={{
+                    title: "Pix",
+                    headerShown:false,
+                }}   
+            />
+            <Stack.Screen name="servicos/pix/dadosUser"         //TELA DE SEGURO
+                options={{
+                    title: "Pix",
+                    headerShown:false,
+                }}   
+            />
         </Stack>
     );
 }

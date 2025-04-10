@@ -3,14 +3,15 @@ import { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import { Button } from "../componentes/button";
 import { TextInputMask } from "react-native-masked-text";
+import { router } from "expo-router";
 
-export default function App() {
+export default function LoginScreen() {
     const [cpf, setCpf] = useState("");
     const [password, setPassword] = useState("");
 
 
     const handleEntrar = () => {
-
+        router.replace("/home")
     }
 
     return (

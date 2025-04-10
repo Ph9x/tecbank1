@@ -4,7 +4,7 @@ import { Button } from "../../componentes/button";
 import { TextInputMask } from 'react-native-masked-text';
 import { router } from "expo-router";
 
-export default function App() {
+export default function infoPessoaisScreen() {
     const [cpf, setCpf] = useState("");
     const [nomeC, setNomeC] = useState("");
     const [email, setEmail] = useState("");
