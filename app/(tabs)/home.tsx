@@ -1,22 +1,32 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import { router } from "expo-router";
-
+import SlideFromLeftWithGestureModal from "../../componentes/UserModal";
 
 
 // Tela Home
 export default function HomeScreen() {
 
-    const handleAreaPix = () =>{
+    //MODAL
+    const [visible, setVisible] = useState(false);
+    const toggleModal = () => setVisible(prev => !prev);    //INVERTE O VALOR ATUAL DO visible(true==false) $$ (false==true)
+
+    const handleSairConta = () =>{
+        router.replace("../")
+    }
+
+
+
+    const handleAreaPix = () => {
         router.navigate("/areaPix")
-    }; 
-    const handleCartao = () =>{
+    };
+    const handleCartao = () => {
         router.navigate("/cartao")
-    }; 
-    const handleSeguro = () =>{
+    };
+    const handleSeguro = () => {
         router.navigate("servicos/seguro")
-    }; 
+    };
 
     const [visivel, setVisivel] = useState(true);
 
@@ -24,21 +34,23 @@ export default function HomeScreen() {
 
     }
 
+
     return (
         <SafeAreaView style={styles.container}>
 
             <View style={styles.header}>
                 <View style={styles.headerESQ}>
-                    <View style={styles.headerUser}>
+                    <TouchableOpacity onPress={toggleModal} style={styles.headerUser}>
                         <FontAwesome name="user" size={25} color="#fff" />
-                    </View>
+                    </TouchableOpacity>
                     <View style={styles.headerUserAreaText}>
                         <Text style={styles.headerUserText}>Olá, usuário</Text>
                     </View>
                 </View>
 
                 <View style={styles.headerDIR}>
-                    <TouchableOpacity style={styles.headerDirEye} onPress={() => setVisivel(!visivel)}>
+                    <TouchableOpacity   //QUANDO CLICAR O BOTÃO ABRE O MODAL
+                        style={styles.headerDirEye} onPress={() => setVisivel(!visivel)}>
                         <FontAwesome
                             name={visivel ? "eye" : "eye-slash"}
                             size={25}
@@ -54,10 +66,16 @@ export default function HomeScreen() {
                     </TouchableOpacity>
 
                 </View>
+
+
             </View>
 
+
             <View style={styles.content}>
+
+
                 <View style={styles.top}>
+
                     <View style={styles.topSaldo}>
                         <Text style={styles.topSaldoText}>
                             {visivel ? "R$ 00,00" : "R$ ••••"}
@@ -67,7 +85,7 @@ export default function HomeScreen() {
                         <View style={styles.topOpcoesCima}>
 
                             <View>
-                                <TouchableOpacity style={styles.areaIcone} onPress={handleAreaPix}> 
+                                <TouchableOpacity style={styles.areaIcone} onPress={handleAreaPix}>
                                     <Image
                                         source={require('../../assets/icons/pix.png')}
                                         style={styles.icone}
@@ -109,11 +127,65 @@ export default function HomeScreen() {
                     </View>
                 </View>
 
+
                 <View style={styles.bottom}>
+
                     <Text style={styles.text}>Lucro Mensal</Text>
                 </View>
+
+                <SlideFromLeftWithGestureModal
+                    //MOSTRANDO O MODAL E DEFININDO VALORES
+                    visible={visible} onClose={() => setVisible(false)}>
+
+                    <View style={styles.dadosUser}>
+                        <Text style={styles.dadosUserTitle}>Dados bancários</Text>
+                        <View style={styles.dadosUserItem}>
+                            <Text style={styles.dadosUserH1}>Agência</Text>
+                            <Text style={styles.dadosUserH2}>0001</Text>
+                        </View>
+                        <View style={styles.dadosUserItem}>
+                            <Text style={styles.dadosUserH1}>Conta</Text>
+                            <Text style={styles.dadosUserH2}>98664539-4</Text>
+                        </View>
+                        <View style={styles.dadosUserItem}>
+                            <Text style={styles.dadosUserH1}>Banco</Text>
+                            <Text style={styles.dadosUserH2}>0320</Text>
+                        </View>
+                        <View style={styles.dadosUserItem}>
+                            <Text style={styles.dadosUserH2}>TecBank - Instituição de Pagamentos</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.opcoesUser}>
+                        <TouchableOpacity style={styles.opcaoUser}>
+                            <FontAwesome name="user" size={25} color="#fff" />
+                            <Text style={styles.opcaoUserText}>Minha conta</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.opcaoUser}>
+                            <FontAwesome name="lock" size={25} color="#fff" />
+                            <Text style={styles.opcaoUserText}>Trocar senha</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.opcaoUser}>
+                            <FontAwesome name="exclamation-circle" size={25} color="#fff" />
+                            <Text style={styles.opcaoUserText}>Sobre o banco</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.sairUserArea}>
+                        <TouchableOpacity style={styles.sairUser} onPress={handleSairConta}>
+                            <FontAwesome name="sign-out-alt" size={25} color="#E878EF" />
+                            <Text style={styles.SairUserText}>Sair da conta</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                </SlideFromLeftWithGestureModal>
             </View>
+
+
         </SafeAreaView>
+
+
     );
 }
 
@@ -236,4 +308,71 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
     },
+
+    //MODAL
+    dadosUser: {
+        borderWidth: 1,
+        borderColor: "#E878EF",
+        padding: 5,
+
+    },
+    dadosUserTitle: {
+        fontSize: 16,
+        color: "#E878EF",
+        fontWeight: "bold",
+        marginBottom: 5
+    },
+    dadosUserItem: {
+        marginBottom: 10
+    },
+    dadosUserH1: {
+        fontSize: 16,
+        color: "#ddd",
+        fontWeight: "400"
+    },
+    dadosUserH2: {
+        fontSize: 14,
+        color: "#fff",
+        fontWeight: "bold"
+    },
+
+    opcoesUser: {
+        marginTop: 30,
+    },
+    opcaoUser: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#E878EF",
+        padding: 12,
+        borderRadius: 5,
+        marginBottom: 30
+    },
+    opcaoUserText: {
+        textAlign: "center",
+        flex: 1,
+        fontSize: 18,
+        marginLeft: 20,
+        color: "#fff",
+        fontWeight: "bold"
+    },
+    sairUserArea: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    sairUser: {
+        flexDirection: "row",
+        padding:10,
+        borderWidth:2,
+        borderColor: "#E878EF",
+        borderRadius: 30
+    },
+    SairUserText:{
+        textAlign: "center",
+        flex: 1,
+        fontSize: 18,
+        marginLeft: 20,
+        color: "#E878EF",
+        fontWeight: "bold" 
+    }
+
 });

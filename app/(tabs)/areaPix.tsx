@@ -14,6 +14,9 @@ export default function AreaPixScreen() {
     const handleRealizarPix = () => {        //QUANDO DIGITAR O PIX 
         router.navigate("servicos/pix/pix")
     }
+    const handleCopiaCola = () => {        //PIX COPIA E COLA 
+        router.navigate("servicos/pix/copiaCola")
+    }
 
 
     return (
@@ -73,7 +76,7 @@ export default function AreaPixScreen() {
                             </View>
 
                             <View>
-                                <TouchableOpacity style={styles.OutroPagamento}>
+                                <TouchableOpacity style={styles.OutroPagamento} onPress={handleCopiaCola}>
                                     <Image
                                         source={require('../../assets/icons/copia_cola.png')}
                                         style={styles.icone}

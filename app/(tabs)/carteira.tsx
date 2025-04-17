@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { TextInput, View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Pressable, Keyboard } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Pressable, Keyboard } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome5";
 
 
 

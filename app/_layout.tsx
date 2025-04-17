@@ -52,6 +52,15 @@ export default function RootLayout() {
                     headerShown:false,
                 }}   
             />
+            <Stack.Screen name="servicos/pix/copiaCola"         //TELA DE SEGURO
+                options={{
+                    title: "Pix",
+                    headerShown:false,
+                }}   
+            />
         </Stack>
+
+        
     );
 }
+
