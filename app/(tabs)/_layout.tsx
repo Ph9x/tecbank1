@@ -6,6 +6,7 @@ import { Tabs } from "expo-router";         //ÁREAS ESPECÍFICAS
 export default function TabLayout() {
     return (
         <Tabs screenOptions={{
+            tabBarInactiveTintColor:"#777",
             tabBarActiveTintColor: "#fff",
             headerShown:false,
             tabBarStyle:{       //AREA DE BAIXO DO MEU TAB 

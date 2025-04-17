@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Pressable, Keyboard, TextInput } from "react-native";
+import { View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 import { Button } from "../../../componentes/button";
-import { TextInputMask } from "react-native-masked-text";
 
 
 
