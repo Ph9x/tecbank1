@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import {View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Pressable, Keyboard } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Pressable, Keyboard } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome5";
+import { getToken } from "../services/tokenService";
+import { buscarSaldo } from "../services/saldoService";
+import { router, useFocusEffect } from "expo-router";
 
 
 
@@ -9,7 +12,31 @@ import FontAwesome from "@expo/vector-icons/FontAwesome5";
 export default function CarteiraScreen() {
 
     const [visivel, setVisivel] = useState(true);
+    const [saldo, setSaldo] = useState<number | null>(null);  // ARMAZENAR O SALDO
 
+    const carregarSaldo = async () => {
+        const data = await buscarSaldo();
+        if (data && data.saldo !== undefined) {
+            setSaldo(Number(data.saldo));
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            carregarSaldo();
+        }, [])
+    );
+
+    const handleExtrato = () => {
+        router.navigate("servicos/extrato")
+    }
+
+    const handleChavePix = () => {
+        router.navigate("servicos/registrarChavePix")
+    }
+    const handleGuardarDim = () => {
+        router.navigate("servicos/guardarDinheiro")
+    }
 
 
     return (
@@ -28,7 +55,17 @@ export default function CarteiraScreen() {
                         </View>
                         <View style={styles.areaSaldoVisible}>
                             <Text style={styles.areaSaldoText}>
-                                {visivel ? "R$ 00,00" : "R$ ••••"}
+                                <Text style={styles.areaSaldoText}>
+                                    <Text style={styles.areaSaldoText}>
+                                        {visivel
+                                            ? saldo !== null && typeof saldo === "number"
+                                                ? `R$ ${saldo.toFixed(2)}`
+                                                : 'R$ 0.00'
+                                            : 'R$ ••••'}
+                                    </Text>
+
+                                </Text>
+
                             </Text>
                             <TouchableOpacity onPress={() => setVisivel(!visivel)}>
                                 <FontAwesome
@@ -47,14 +84,14 @@ export default function CarteiraScreen() {
                     <View style={styles.areaGuardaDim}>
                         <View>
                             <Text style={styles.areaGuardaDimTitleH1}>
-                                Guarde aqui o seu dinheiro com segurança e praticidade.
+                                Opções:
                             </Text>
                         </View>
 
                         <View style={styles.areaGeralGuardaDim}>
 
                             <View>
-                                <TouchableOpacity style={styles.areaItemGuardarDim}>
+                                <TouchableOpacity style={styles.areaItemGuardarDim} onPress={handleGuardarDim}>
                                     <Image
                                         source={require('../../assets/icons/box.png')}
                                         style={styles.icone}
@@ -63,6 +100,30 @@ export default function CarteiraScreen() {
                                 </TouchableOpacity>
                                 <View>
                                     <Text style={styles.IconeText}>Guardar{"\n"}Dinheiro</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <TouchableOpacity style={styles.areaItemGuardarDim} onPress={handleChavePix}>
+                                    <Image
+                                        source={require('../../assets/icons/chavePix.png')}
+                                        style={styles.icone}
+                                        resizeMode="cover"
+                                    />
+                                </TouchableOpacity>
+                                <View>
+                                    <Text style={styles.IconeText}>Registrar{"\n"}chave Pix</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <TouchableOpacity style={styles.areaItemGuardarDim} onPress={handleExtrato}>
+                                    <Image
+                                        source={require('../../assets/icons/extrato.png')}
+                                        style={styles.icone}
+                                        resizeMode="cover"
+                                    />
+                                </TouchableOpacity>
+                                <View>
+                                    <Text style={styles.IconeText}>Extrato</Text>
                                 </View>
                             </View>
 
@@ -159,15 +220,15 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     areaGuardaDimTitleH1: {
-        fontSize: 21,
+        fontSize: 25,
         fontWeight: "600",
         color: "#ddd",
         marginBottom: 40,
-        textAlign: "center"
     },
     areaGeralGuardaDim: {
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "space-around",
+
     },
     areaItemGuardarDim: {
         width: 90,

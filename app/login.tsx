@@ -1,18 +1,52 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome5";
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
+import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Keyboard, Alert } from "react-native";
 import { Button } from "../componentes/button";
 import { TextInputMask } from "react-native-masked-text";
 import { router } from "expo-router";
+import { login } from "./services/loginService";
+import { storeToken } from "./services/tokenService";
 
 export default function LoginScreen() {
     const [cpf, setCpf] = useState("");
     const [password, setPassword] = useState("");
 
 
-    const handleEntrar = () => {
-        router.replace("/home")
-    }
+    //SÓ IRÁ FAZER O LOGIN CASO O USUÁRIO E SENHA SEJAM COMPATIVEIS COM O BANCO DE DADOS
+    const handleEntrar = async () => {
+        if (!cpf || !password) {      //VERIFICA SE CPF E SENHA ESTÃO PREENCHIDOS
+            Alert.alert("Erro","Preencha todos os campos");
+            return;
+        }
+        // Verificar se a senha tem pelo menos 6 caracteres
+        if (!/^\d{6}$/.test(password)) {
+            Alert.alert("Erro", "A senha deve conter exatamente 6 números.");
+            return;
+        }
+
+        try {
+
+            //CHAMA O SERVIDOR DE LOGIN
+            const data = await login(cpf, password);
+
+            //VERIFICA SE A MENSAGEM QUANDO DER TUDO CERTO É IGUAL A DO SERVIDOR
+            if (data.message === "Tudo certo" && data.token) {
+                //SALVA O TOKEN NO SECURESTORE
+                await storeToken(data.token);
+
+                router.replace("/home");
+            } else if (data.error === "Usuário não encontrado") { //VERIFICA A MENSAGEM DO SERVIDOR E EM BAIXO MOSTRA O ERRO
+                Alert.alert("Erro","CPF incorreto")
+            } else if (data.error === "Senha Incorreta") {
+                Alert.alert("Erro","Senha incorreta")
+            } else {
+                alert(data.error || "Erro desconhecido")
+            }
+        } catch (error: any) {
+            alert(error.message);
+        }
+    };
+
 
     return (
         <KeyboardAvoidingView                   //Evita que o teclado esconda os campo de entrada 
@@ -47,7 +81,9 @@ export default function LoginScreen() {
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry={true}      //ESCONDER A SENHA
-                            maxLength={30}
+                            keyboardType="numeric"
+                            maxLength={6}
+                            contextMenuHidden={true}        //IMPEDE COPIAR E COLAR
                         />
                     </View>
 

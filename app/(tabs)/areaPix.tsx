@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { TextInput, View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Pressable, Keyboard } from "react-native";
+import { TextInput, View, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, Image, Pressable, Keyboard, Alert } from "react-native";
 import { Button } from "../../componentes/button";
 import { router } from "expo-router";
+import { getAuthHeader } from "../services/tokenService";
 
 
 
@@ -11,13 +12,59 @@ export default function AreaPixScreen() {
 
     const [pix, setPix] = useState("");
 
-    const handleRealizarPix = () => {        //QUANDO DIGITAR O PIX 
-        router.navigate("servicos/pix/pix")
+    const handleRealizarPix = async () => {        //QUANDO DIGITAR O PIX 
+        try {
+            const authHeader = await getAuthHeader();
+
+            if (!authHeader || !authHeader.Authorization) {
+                Alert.alert("Erro", "Usuário não autenticado.");
+                return;
+            }
+
+            const response = await fetch('http://coloque_seu_ip_aqui/usuario/pix-validar', {
+                method: "POST",
+                headers: {
+                    ...authHeader,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ chave: pix }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.log("Erro", errorText);
+                Alert.alert("Erro", "Chave Pix inválida ou não encontrada.");
+                return;
+            }
+            const data = await response.json();
+            const dados = data.chavePix;
+
+            // Se a chave existir, navega para a tela de valor
+            router.push({
+                pathname: "servicos/pix/pix",
+                params: {
+                    contaId: dados.contaId,
+                    nome: dados.conta?.usuario?.nome || "",
+                    chave: pix,
+                    agencia: dados.conta?.agencia || "",
+                    conta: dados.conta?.numero || "",
+                },
+            });
+
+        } catch (error) {
+            console.error("Erro ao validar chave Pix:", error);
+            Alert.alert("Erro", "Erro de conexão com o servidor.");
+        }
     }
     const handleCopiaCola = () => {        //PIX COPIA E COLA 
         router.navigate("servicos/pix/copiaCola")
     }
-
+    const handleEscanearPix = () => {
+        router.navigate("servicos/EscanearPix")
+    }
+    const handlePagarBoleto = () => {
+        router.navigate("servicos/pagarBoleto")
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -63,7 +110,7 @@ export default function AreaPixScreen() {
                         <View style={styles.areaOutrosPagamentos}>
 
                             <View>
-                                <TouchableOpacity style={styles.OutroPagamento}>
+                                <TouchableOpacity style={styles.OutroPagamento} onPress={handlePagarBoleto}>
                                     <Image
                                         source={require('../../assets/icons/barras.png')}
                                         style={styles.icone}
@@ -89,7 +136,7 @@ export default function AreaPixScreen() {
                             </View>
 
                             <View>
-                                <TouchableOpacity style={styles.OutroPagamento}>
+                                <TouchableOpacity style={styles.OutroPagamento} onPress={handleEscanearPix}>
                                     <Image
                                         source={require('../../assets/icons/qr.png')}
                                         style={styles.icone}

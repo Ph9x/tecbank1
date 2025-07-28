@@ -1,16 +1,18 @@
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
 type Props = {
-    title:string;
+    title: string;
     onPress: () => void;
+    disabled?: boolean;  // Adicionando o tipo para 'disabled' (opcional)
 }
 
-export const Button = ({ title, onPress }: Props) => {
+export const Button = ({ title, onPress, disabled = false }: Props) => {
     return (
         <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.7} // Altera opacidade ao pressionar
-            onPress={onPress}
+            style={[styles.button, disabled && styles.disabledButton]}
+            activeOpacity={disabled ? 1 : 0.7} // Altera opacidade ao pressionar
+            onPress={disabled ? undefined : onPress}
+            disabled={disabled} // Passando o 'disabled' para o TouchableOpacity
         >
             <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
@@ -32,6 +34,9 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 5,
 
+    },
+    disabledButton: {
+        backgroundColor: "#D3D3D3", // Cor para o botão desabilitado
     },
     buttonText: {
         fontSize: 25,

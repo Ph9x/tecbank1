@@ -2,15 +2,63 @@ import { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import { Button } from "../../componentes/button";
 import { router } from "expo-router";
+import { useRegister } from "../context/RegisterContext";
+import { Alert } from "react-native";
+
 
 export default function ConfirmacaoScreen() {
+    const { userData, setUserData } = useRegister();    //ACESSAR OS DADOS DO CONTEXTO
+
     const [password, setPassword] = useState("");
     const [confPassword, setConfPassword] = useState("");
 
+    const [loading, setLoading] = useState(false);        //CRIANDO CONTA
 
-    const handleProximo = () => {
-        router.replace("/novaConta/aviso")
-    }
+
+
+    const handleProximo = async () => {
+        if (password !== confPassword) {
+            Alert.alert("Erro", "As senhas não coincidem.");
+            return;
+        }
+        if (password.length !== 6 || !/^\d{6}$/.test(password)) {         //TEM QUE SER TUDO NÚMERO
+            Alert.alert("Erro", "A senha tem que 6 números");
+            return;
+        }
+
+        setUserData(prev => ({
+            ...prev,
+            senhaHash: password,
+            confirmarSenhaHash: confPassword,
+        }));
+
+        setLoading(true);
+        try {
+            const response = await fetch("http://coloque_seu_ip_aqui/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ...userData,        // Dados do usuário (nome, CPF, etc.)
+                    senhaHash: password,    // Senha com hash
+                    confirmarSenhaHash: confPassword,   // Confirmação de senha
+                }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || "Erro ao criar conta.");
+            }
+            // Caso tudo esteja certo, redireciona para a tela de aviso
+            router.replace("/novaConta/aviso");
+        } catch (err) {
+            // Verifica se err é uma instância de Error e exibe a mensagem.
+            const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
+            Alert.alert("Erro", errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <KeyboardAvoidingView                   //Evita que o teclado esconda os campo de entrada 
@@ -33,7 +81,8 @@ export default function ConfirmacaoScreen() {
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry={true}      //ESCONDER A SENHA
-                            maxLength={30}
+                            keyboardType="numeric"
+                            maxLength={6}
                         />
                         <TextInput
                             style={styles.input}
@@ -42,16 +91,18 @@ export default function ConfirmacaoScreen() {
                             value={confPassword}
                             onChangeText={setConfPassword}
                             secureTextEntry={true}
-                            maxLength={30}
+                            keyboardType="numeric"
+                            maxLength={6}
                         />
 
                     </View>
 
+
                     <Button
-                        title="Criar Conta"
+                        title={loading ? "Criando..." : "Criar Conta"}
                         onPress={handleProximo}
-                    >
-                    </Button>
+                        disabled={loading}
+                    />
 
 
                 </View>
